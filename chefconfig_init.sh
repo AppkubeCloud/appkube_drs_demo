@@ -1,6 +1,11 @@
 #!/bin/bash
+if [ "$#" -lt 1 ]; then
+  echo 'Required 1 parameter, usage:- ./chefconfig_init.sh git_repo_path'
+  exit 1
+fi
+repopath=$1
 # Define the local repository path
-repo_path="/home/ubuntu/Dr-Chef-Git-Repo"
+repo_path="$repopath"
 # Change to the local repository directory
 cd "$repo_path" || exit
     echo "Upload cookbooks,data bags,roles and add runlist ..."
