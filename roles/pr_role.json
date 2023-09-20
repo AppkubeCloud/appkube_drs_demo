@@ -1,0 +1,10 @@
+{
+    "name": "pr_role",
+    "description":" this is for pr side pr_role ",
+    "json_class": "Chef::Role",
+    "default_attributes": {
+      "petclinic": {
+        "config_data_bag" :"configbag"
+  }
+    }
+  }

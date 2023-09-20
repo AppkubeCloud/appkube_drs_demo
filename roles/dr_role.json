@@ -1,0 +1,10 @@
+{
+    "name": "dr_role",
+    "description":" this is for dr side dr_role ",
+    "json_class": "Chef::Role",
+    "default_attributes": {
+      "petclinic": {
+        "config_data_bag" :"drconfigbag"
+  }
+    }
+  }

@@ -1,0 +1,7 @@
+{
+    "id": "dbconfig_items",
+    "DB_host": "34.207.166.149",
+    "DB_user": "database_user",
+    "DB_password": "password",
+    "DB_database": "postgresql"
+}
