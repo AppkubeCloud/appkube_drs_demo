@@ -60,8 +60,5 @@ Key steps include :
 + Access the 3-tier application at the DR (Disaster Recovery) site and verify whether our application is operational.
 + Verify whether a new entry can be added to our PostgreSQL database.
 + Verify Elastic IPs are assinged to Nodes.
-## Contributing
-Contributions are welcome! Report issues, suggest features, or submit code changes via pull requests. Please follow our code style, add tests, and update documentation. Respect our Code of Conduct, and contributions are licensed under our project's terms.
-        Thank you for your interest!
 
 
