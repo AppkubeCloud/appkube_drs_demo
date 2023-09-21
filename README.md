@@ -42,23 +42,23 @@ Before implementing disaster recovery for your 3-Tier application, make sure you
 **Step Function** :
 The Step Function orchestrates recovery by systematically invoking Lambda functions.
 Key steps include :
-+ Nodes restoration.
-+ Git repository cloning on the DR workstation.
-+ Update data bag as per DR configuration
-    + default_attributes at role level are used to define site configuration. "pr-role" used primary site configuration and "dr-role" uses disaster site configuration.
-+ Bootstrap nodes
-+ Upload cookbooks
-+ Create databags and load items
-+ Create dr-role and assigned nodes to this role.
-+ Add recipes to the nodes.
-+ Add Route 53 record for dr site.
-
++ Pet-Clinic-DB-server-Restore, Pet-Clinic-App-server-Restore, Pet-Clinic-Web-server-Restore: These functions restores respective server.
++ Assigning-Iam-Pass-Role function: Assign the necessary IAM roles to restore servers.
++ AssociateEIP: Assign predetermine IPs to restore servers.
++ dr-workstation-git-setup: Git repository cloning on the DR workstation and update DR Data bags as per DR site configuration.
++ dr_bootstrap_nodes: Bootstrap the nodes and Applies configuration changes to DR Chef Server.
+     + Upload cookbooks
+     + Create databags and load items
+     + Create dr-role and assigned nodes to this role.
+     + Add recipes to the nodes.
++ Route-53-Record-Add: Update DNS records for DR site.
+    
 **Chef Client**: 
 + Automatically reapplies changes from the updated Chef server on the nodes.
 
 ## Testing
-+ Access the 3-tier application at the DR (Disaster Recovery) site and verify whether our application is operational.
-+ Verify whether a new entry can be added to our PostgreSQL database.
++ Access the 3-tier application at the DR (Disaster Recovery) site and verify application is operational.
++ Verify a new entry can be added to application.
 + Verify Elastic IPs are assinged to Nodes.
 
 
