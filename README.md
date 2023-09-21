@@ -28,7 +28,7 @@ Before implementing disaster recovery for your 3-Tier application, make sure you
 
 ## StepFunction flow
 
-![alt text](https://github.com/abdul-rajak/Dr-Chef-Git-Repo/blob/main/Architecture/StepFunction-flow.jpg?raw=true)
+![alt text](https://github.com/AppkubeCloud/appkube_drs_demo/blob/main/Architecture/StepFunction-flow.jpg?raw=true)
 
 ## Disaster Recovery Workflow
 
