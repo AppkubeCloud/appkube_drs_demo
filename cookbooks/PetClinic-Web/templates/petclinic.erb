@@ -9,3 +9,14 @@ server {
         try_files $uri $uri/ /index.html;
     }
 }
+server {
+    listen 80;
+    server_name web1.synectiks.net;  # Your custom IP or domain
+
+    root /home/ubuntu/spring-petclinic-angular/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
