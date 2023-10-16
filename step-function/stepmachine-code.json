@@ -1,0 +1,353 @@
+{
+    "Comment": "A description of my state machine",
+    "StartAt": "Pet-Clinic-DB-server-Restore",
+    "States": {
+      "Pet-Clinic-DB-server-Restore": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:us-west-1:657907747545:function:Pet-Clinic-DB-server-Restore:$LATEST"
+        },
+        "ResultPath": "$.DB-server-Restore",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException",
+              "Lambda.TooManyRequestsException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.Error",
+            "Next": "FailState"
+          }
+        ],
+        "Next": "Choice-DB-server-Restore"
+      },
+      "Choice-DB-server-Restore": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.DB-server-Restore.Payload.statusCode",
+            "NumericEquals": 200,
+            "Next": "Pet-Clinic-App-server-Restore"
+          }
+        ],
+        "Default": "FailState"
+      },
+      "Pet-Clinic-App-server-Restore": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:us-west-1:657907747545:function:Pet-Clinic-App-server-Restore:$LATEST"
+        },
+        "ResultPath": "$.App-server-Restore",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException",
+              "Lambda.TooManyRequestsException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.Error",
+            "Next": "FailState"
+          }
+        ],
+        "Next": "Choice-App-server-Restore"
+      },
+      "Choice-App-server-Restore": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.App-server-Restore.Payload.statusCode",
+            "NumericEquals": 200,
+            "Next": "Pet-Clinic-Web-server-Restore"
+          }
+        ],
+        "Default": "FailState"
+      },
+      "Pet-Clinic-Web-server-Restore": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:us-west-1:657907747545:function:Pet-Clinic-Web-server-Restore:$LATEST"
+        },
+        "ResultPath": "$.Web-server-Restore",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException",
+              "Lambda.TooManyRequestsException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.Error",
+            "Next": "FailState"
+          }
+        ],
+        "Next": "Choice-Web-server-Restore"
+      },
+      "Choice-Web-server-Restore": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.Web-server-Restore.Payload.statusCode",
+            "NumericEquals": 200,
+            "Next": "WaitForRestoreInstancesUpRunning"
+          }
+        ],
+        "Default": "FailState"
+      },
+      "WaitForRestoreInstancesUpRunning": {
+        "Type": "Wait",
+        "Seconds": 240,
+        "Next": "Assigning-Iam-Pass-Role"
+      },
+      "Assigning-Iam-Pass-Role": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:us-west-1:657907747545:function:Assign-Iam-Pass-Role:$LATEST"
+        },
+        "ResultPath": "$.Assigning-IamPassRole",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException",
+              "Lambda.TooManyRequestsException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.Error",
+            "Next": "FailState"
+          }
+        ],
+        "Next": "Choice-Assigning-Iam-Pass-Role"
+      },
+      "Choice-Assigning-Iam-Pass-Role": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.Assigning-IamPassRole.Payload.statusCode",
+            "NumericEquals": 200,
+            "Next": "AssociateEIP"
+          }
+        ],
+        "Default": "FailState"
+      },
+      "AssociateEIP": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:us-west-1:657907747545:function:AssociateEIP:$LATEST"
+        },
+        "ResultPath": "$.AssociateEIP",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException",
+              "Lambda.TooManyRequestsException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.Error",
+            "Next": "FailState"
+          }
+        ],
+        "Next": "Choice-AssociateEIP"
+      },
+      "Choice-AssociateEIP": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.AssociateEIP.Payload.statusCode",
+            "NumericEquals": 200,
+            "Next": "dr-workstation-git-setup"
+          }
+        ],
+        "Default": "FailState"
+      },
+      "dr-workstation-git-setup": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:us-west-1:657907747545:function:dr-workstation-git-setup:$LATEST"
+        },
+        "ResultPath": "$.dr-workstation-git-setup",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException",
+              "Lambda.TooManyRequestsException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.Error",
+            "Next": "FailState"
+          }
+        ],
+        "Next": "Choice-dr-workstation-git-setup"
+      },
+      "Choice-dr-workstation-git-setup": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.dr-workstation-git-setup.Payload.statusCode",
+            "NumericEquals": 200,
+            "Next": "dr_bootstrap_nodes"
+          }
+        ],
+        "Default": "FailState"
+      },
+      "dr_bootstrap_nodes": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:us-west-1:657907747545:function:dr_bootstrap_nodes:$LATEST"
+        },
+        "ResultPath": "$.dr-bootstrap-nodes",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException",
+              "Lambda.TooManyRequestsException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.Error",
+            "Next": "FailState"
+          }
+        ],
+        "Next": "Choice-dr_bootstrap_nodes"
+      },
+      "Choice-dr_bootstrap_nodes": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.dr-bootstrap-nodes.Payload.statusCode",
+            "NumericEquals": 200,
+            "Next": "Route-53-Record-Add"
+          }
+        ],
+        "Default": "FailState"
+      },
+      "Route-53-Record-Add": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:us-west-1:657907747545:function:Route-53-Record-Add:$LATEST"
+        },
+        "ResultPath": "$.Route-53-Record-Add",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "Lambda.ServiceException",
+              "Lambda.AWSLambdaException",
+              "Lambda.SdkClientException",
+              "Lambda.TooManyRequestsException"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 6,
+            "BackoffRate": 2
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.Error",
+            "Next": "FailState"
+          }
+        ],
+        "Next": "Choice-Route-53-Record-Add"
+      },
+      "Choice-Route-53-Record-Add": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.Route-53-Record-Add.Payload.status",
+            "StringEquals": "PENDING",
+            "Next": "SuccessState"
+          }
+        ],
+        "Default": "FailState"
+      },
+      "SuccessState": {
+        "Type": "Succeed"
+      },
+      "FailState": {
+        "Type": "Fail"
+      }
+    }
+  }
